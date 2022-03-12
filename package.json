@@ -1,0 +1,35 @@
+{
+  "name": "myurlshortener",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www --exec babel-node --presets babel-preset-env",
+    "test": "jest --verbose",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix"
+  },
+  "dependencies": {
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "mongoose": "^6.2.5",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.15",
+    "shortid": "^2.2.16"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^27.5.1",
+    "babel-loader": "^8.2.3",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^8.9.0",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "jest": "^27.5.1",
+    "mockingoose": "^2.15.2",
+    "node-mocks-http": "^1.11.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1",
+    "supertest": "^6.2.2"
+  }
+}
