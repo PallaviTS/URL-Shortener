@@ -11,11 +11,25 @@ const shortUrlSchema = new Schema({
     required: true,
     default: `tier.app-${generate()}`,
   },
-  clicks: {
+});
+
+const visitSchema = new Schema({
+  count: {
     type: Number,
     required: true,
     default: 0,
   },
+  url: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: 'ShortUrl',
+  },
 });
 
-export default model('ShortUrl', shortUrlSchema);
+// ShortUrl - collection to save every valid full URL with generated short URL
+// Visit - collection to save every visit to short URL with visit counter
+
+const Visit = model('Visit', visitSchema);
+const ShortUrl = model('ShortUrl', shortUrlSchema);
+
+export { Visit, ShortUrl };
