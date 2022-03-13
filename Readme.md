@@ -2,6 +2,8 @@
 
 This is an implementation of URL Shortener Server, where clients can pass long URL and get back shortened version of it.
 
+https://user-images.githubusercontent.com/3283172/158072650-23e7cf6e-d011-4bd7-8d62-128197e0b48e.mov
+
 ## Requirements
 
 The server is written in [Node v17](https://nodejs.org/en/) and [Express v4](https://github.com/expressjs/express). You will also need the [MongoDB](https://www.mongodb.com/collateral/mongodb-5-whats-new) database to run the server.
