@@ -1,11 +1,11 @@
 import request from 'supertest';
 import app from '../../app';
-import * as mockingoose from 'mockingoose';
+import { fetchByFullUrl, handleNewFullUrl } from '../../services/shortUrls';
 
-import { ShortUrl } from '../../models/shortUrls';
+jest.mock('../../services/shortUrls');
 
 afterEach(() => {
-  mockingoose.resetAll();
+  jest.restoreAllMocks();
 });
 
 const mockedUrl = {
@@ -18,14 +18,14 @@ describe('POST', () => {
     it('returns 200 with url', async () => {
       expect.assertions(2);
 
-      mockingoose(ShortUrl).toReturn(mockedUrl, 'findOne');
+      fetchByFullUrl.mockReturnValue(mockedUrl);
 
       const response = await request(app).post('/shortUrls').send({
         fullUrl: mockedUrl.full,
       });
 
       expect(response.statusCode).toEqual(200);
-      expect(response.body).toMatchObject(mockedUrl);
+      expect(response.body).toEqual(mockedUrl);
     });
   });
 
@@ -33,7 +33,8 @@ describe('POST', () => {
     it('creates new url and returns 200 with message', async () => {
       expect.assertions(2);
 
-      mockingoose(ShortUrl).toReturn(null, 'find');
+      fetchByFullUrl.mockReturnValue(null);
+      handleNewFullUrl.mockReturnValue(mockedUrl);
 
       const response = await request(app).get('/shortUrls');
 

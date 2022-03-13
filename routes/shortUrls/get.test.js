@@ -1,28 +1,16 @@
 import request from 'supertest';
 import app from '../../app';
+import { handleVisitToShortUrl } from '../../services/shortUrls';
 
-import mongoose from 'mongoose';
-import * as mockingoose from 'mockingoose';
-
-const ObjectId = mongoose.Types.ObjectId;
-
-import { ShortUrl, Visit } from '../../models/shortUrls';
+jest.mock('../../services/shortUrls');
 
 afterEach(() => {
-  mockingoose.resetAll();
+  jest.restoreAllMocks();
 });
 
-const shortUrlData = {
+const mockedData = {
   full: 'https://expressjs.com/en/guide/routing.html',
   short: 'tier.app-PFaLqVSwV',
-  _id: ObjectId('609269995b2e888426d019ef'),
-};
-
-const visitData = {
-  count: 1,
-  url: {
-    ...shortUrlData,
-  },
 };
 
 describe('GET', () => {
@@ -30,17 +18,12 @@ describe('GET', () => {
     it('redirects to full url', async () => {
       expect.assertions(2);
 
-      mockingoose(ShortUrl).toReturn(shortUrlData, 'findOne');
-      mockingoose(Visit).toReturn(visitData, 'findOne');
+      handleVisitToShortUrl.mockReturnValue(mockedData);
 
-      const response = await request(app).get(
-        `/shortUrls/${shortUrlData.short}`
-      );
+      const response = await request(app).get(`/shortUrls/${mockedData.short}`);
 
       expect(response.statusCode).toEqual(302);
-      expect(response.text).toEqual(
-        `Found. Redirecting to ${shortUrlData.full}`
-      );
+      expect(response.text).toEqual(`Found. Redirecting to ${mockedData.full}`);
     });
   });
 
@@ -48,11 +31,9 @@ describe('GET', () => {
     it('returns 404', async () => {
       expect.assertions(1);
 
-      mockingoose(ShortUrl).toReturn(null, 'findOne');
+      handleVisitToShortUrl.mockReturnValue(null);
 
-      const response = await request(app).get(
-        `/shortUrls/${shortUrlData.short}`
-      );
+      const response = await request(app).get(`/shortUrls/${mockedData.short}`);
 
       expect(response.statusCode).toEqual(404);
     });

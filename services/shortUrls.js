@@ -2,9 +2,16 @@ import { ShortUrl, Visit } from '../models/shortUrls';
 
 // service with extracted functions that fetches data from DB
 
-// fetch all urls with visits count
-const fetchUrls = () =>
-  Visit.find().select('-_id -__v').populate('url', '-_id -__v');
+// fetch all urls with visit count
+const fetchUrls = async () => {
+  const visits = await Visit.find()
+    .select('-_id -__v')
+    .populate('url', '-_id -__v');
+
+  return visits.map(({ count, url: { full, short } }) => {
+    return { visitCount: count, full, short };
+  });
+};
 
 const incrementVisits = async (shortUrl) => {
   const visit = await Visit.findOne({ url: shortUrl });

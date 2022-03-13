@@ -1,42 +1,36 @@
 import request from 'supertest';
 import app from '../../app';
-import * as mockingoose from 'mockingoose';
+import { fetchUrls } from '../../services/shortUrls';
 
-import { Visit } from '../../models/shortUrls';
+jest.mock('../../services/shortUrls');
 
 afterEach(() => {
-  mockingoose.resetAll();
+  jest.restoreAllMocks();
 });
 
 const mockedVisits = [
   {
-    count: 2,
-    url: {
-      full: 'https://www.monkeyuser.com/2019/bug-fixing-ways/1',
-      short: 'tier.app-atrrKwWfW',
-    },
+    visitCount: 1,
+    full: 'https://www.monkeyuser.com/2019/bug-fixing-ways/1',
+    short: 'tier.app-ST7xZpprI',
   },
   {
-    count: 0,
-    url: {
-      full: 'https://www.monkeyuser.com/2019/bug-fixing-ways/2',
-      short: 'tier.app-atrrKwWfW',
-    },
+    visitCount: 1,
+    full: 'https://www.monkeyuser.com/2019/bug-fixing-ways/1',
+    short: 'tier.app-ST7xZpprI',
   },
 ];
 
 describe('GET', () => {
   describe('when short urls are present', () => {
     it('returns 200 with list of urls', async () => {
-      expect.assertions(3);
+      expect.assertions(2);
 
-      mockingoose(Visit).toReturn(mockedVisits, 'find');
-
+      fetchUrls.mockReturnValue(mockedVisits);
       const response = await request(app).get('/shortUrls');
 
       expect(response.statusCode).toEqual(200);
-      expect(response.body[0]).toMatchObject({ count: mockedVisits[0].count });
-      expect(response.body[1]).toMatchObject({ count: mockedVisits[1].count });
+      expect(response.body).toEqual(mockedVisits);
     });
   });
 
@@ -44,7 +38,7 @@ describe('GET', () => {
     it('returns 200 with message', async () => {
       expect.assertions(2);
 
-      mockingoose(Visit).toReturn(null, 'find');
+      fetchUrls.mockReturnValue(null);
 
       const response = await request(app).get('/shortUrls');
 
