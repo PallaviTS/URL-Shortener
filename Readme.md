@@ -74,11 +74,9 @@ will return
 ```sh
 [
     {
-        "count": 1,
-        "url": {
-            "full": "https://www.monkeyuser.com/2019/bug-fixing-ways",
-            "short": "tier.app-_RgWjL-tt"
-        }
+        "visitCount": 1,
+        "full": "https://www.monkeyuser.com/2019/bug-fixing-ways",
+        "short": "tier.app-_RgWjL-tt"
     }
 ]
 ```
