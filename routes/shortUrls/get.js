@@ -1,13 +1,12 @@
-import { fetchByShortUrl, incrementClicks } from '../../services/shortUrls';
+import { handleVisitToShortUrl } from '../../services/shortUrls';
 
+// check if the short url exists, if not return 404
 const getRouter = async (req, res, next) => {
   const { shortUrl } = req.params;
 
   try {
-    const url = await fetchByShortUrl(shortUrl);
+    const url = await handleVisitToShortUrl(shortUrl);
     if (!url) return res.status(404).json({ message: `${shortUrl} Not found` });
-
-    incrementClicks(url);
 
     return res.redirect(url.full);
   } catch (error) {

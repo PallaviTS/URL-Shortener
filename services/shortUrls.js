@@ -1,22 +1,40 @@
-import ShortUrl from '../models/shortUrls';
+import { ShortUrl, Visit } from '../models/shortUrls';
 
-const fetchUrls = () => ShortUrl.find();
+// service with extracted functions that fetches data from DB
 
-const fetchByShortUrl = (short) => ShortUrl.findOne({ short });
+// fetch all urls with visits count
+const fetchUrls = () =>
+  Visit.find().select('-_id -__v').populate('url', '-_id -__v');
 
-const fetchByFullUrl = (full) => ShortUrl.findOne({ full });
-
-const createShortUrl = (full) => ShortUrl.create({ full });
-
-const incrementClicks = (url) => {
-  url.clicks++;
-  url.save();
+const incrementVisits = async (shortUrl) => {
+  const visit = await Visit.findOne({ url: shortUrl });
+  visit.count++;
+  visit.save();
 };
 
-export {
-  fetchUrls,
-  fetchByShortUrl,
-  fetchByFullUrl,
-  createShortUrl,
-  incrementClicks,
+// fetch and increment the visit count
+const handleVisitToShortUrl = async (short) => {
+  const shortUrl = await ShortUrl.findOne({ short });
+
+  if (shortUrl) {
+    await incrementVisits(shortUrl);
+
+    return { full: shortUrl.full, short: shortUrl.short };
+  }
 };
+
+const fetchByFullUrl = (full) => ShortUrl.findOne({ full }).select('-_id -__v');
+
+const createVisit = async (shortUrl) => {
+  await Visit.create({ url: shortUrl });
+};
+
+// create short url for given full url and create visit reference
+const handleNewFullUrl = async (full) => {
+  const shortUrl = await ShortUrl.create({ full });
+  await createVisit(shortUrl);
+
+  return { full: shortUrl.full, short: shortUrl.short };
+};
+
+export { fetchUrls, handleVisitToShortUrl, fetchByFullUrl, handleNewFullUrl };

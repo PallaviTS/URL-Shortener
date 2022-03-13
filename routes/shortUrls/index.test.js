@@ -2,11 +2,11 @@ import request from 'supertest';
 import app from '../../app';
 import * as mockingoose from 'mockingoose';
 
-import ShortUrlModel from '../../models/shortUrls';
+import { ShortUrl } from '../../models/shortUrls';
 
 beforeEach(() => {
   mockingoose.resetAll();
-  mockingoose(ShortUrlModel).toReturn(null, 'find');
+  mockingoose(ShortUrl).toReturn(null, 'find');
 });
 
 afterEach(() => {

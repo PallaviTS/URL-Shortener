@@ -6,10 +6,13 @@ import getRouter from './get';
 
 const router = Router();
 
-router.get('/', allRouter);
-
+// to create short url
 router.post('/', postRouter);
 
+// to fetch full url by given short url
 router.get('/:shortUrl', getRouter);
+
+// to show all urls with visits count
+router.get('/', allRouter);
 
 export default router;
