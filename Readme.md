@@ -8,6 +8,12 @@ The server is written in [Node v17](https://nodejs.org/en/) and [Express v4](htt
 
 ## Setup
 
+Clone the repo by doing
+
+```sh
+git clone https://github.com/PallaviTS/URL-Shortener.git
+```
+
 With `Node`, `NPM` and `MongoDB` installed on your system you can install the application locally using
 
 ```sh
@@ -51,10 +57,13 @@ curl -d '{"fullUrl":"https://www.monkeyuser.com/2019/bug-fixing-ways/"}' -H "Con
 will return unique short url with `tier.app-` as base
 
 ```sh
-{"full":"https://www.monkeyuser.com/2019/bug-fixing-ways/","short":"tier.app-fZyNHUNko"}
+{
+    "full": "https://www.monkeyuser.com/2019/bug-fixing-ways",
+    "short": "tier.app-_RgWjL-tt"
+}
 ```
 
-### Get all the created short URLs
+### Get all short URLs with visits
 
 ```sh
 curl -X GET http://localhost:3000/shortUrls
@@ -63,13 +72,21 @@ curl -X GET http://localhost:3000/shortUrls
 will return
 
 ```sh
-[{"full":"https://www.monkeyuser.com/2019/bug-fixing-ways/","short":"tier.app-fZyNHUNko","clicks":0}]
+[
+    {
+        "count": 1,
+        "url": {
+            "full": "https://www.monkeyuser.com/2019/bug-fixing-ways",
+            "short": "tier.app-_RgWjL-tt"
+        }
+    }
+]
 ```
 
 ### Get a short URL by short ID
 
 ```sh
-curl -X GET http://localhost:3000/shortUrls/tier.app-fZyNHUNko
+curl -X GET http://localhost:3000/shortUrls/tier.app-_RgWjL-tt
 ```
 
 will redirect `https://www.monkeyuser.com/2019/bug-fixing-ways/`
@@ -82,7 +99,7 @@ The server implements some validation:
 - Full URL in POST request needs to be valid and present
 - Server returns error stacktrace only for `dev` environment and on `production` no data is leaked
 
-When validation fails or when short URL cannot be found, the server responds with an error message, for example:
+When validation fails or when short URL cannot be found, the server responds with message, for example:
 
 ```
 GET /shortUrls/10
@@ -108,4 +125,6 @@ POST /shortUrls with Body {"fullUrl":"not an URL"}
 
 ## Possible improvements
 
--
+- When accessing an existing endpoint path with a different HTTP method the server will respond with 405 Method Not Allowed, we could add the `Allow` response header with the method(s) currently supported
+- Error messages, especially for endpoint path/method combinations not allowed, can be improved to include path/method in response
+- Sucess response, could include ids and respond with 201 status code depending on clients requirement
