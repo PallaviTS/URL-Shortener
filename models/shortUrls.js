@@ -9,7 +9,10 @@ const shortUrlSchema = new Schema({
   short: {
     type: String,
     required: true,
-    default: `tier.app-${generate()}`,
+    default: () => {
+      let shortID = generate();
+      return 'tier.app-' + shortID;
+    },
   },
 });
 
